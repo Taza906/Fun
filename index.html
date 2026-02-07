@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Will you be my Valentine?</title>
+  <style>
+    :root{
+      --bg1:#f7c6d8;
+      --bg2:#f3b6cf;
+      --card:#ffffffd9;
+      --text:#1b1b1b;
+      --yes:#ff3b7a;
+      --yesHover:#ff1f67;
+      --btnText:#fff;
+      --shadow: 0 18px 50px rgba(0,0,0,.18);
+      --radius: 22px;
+      --font: ui-rounded, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+    }
+
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      min-height:100vh;
+      display:grid;
+      place-items:center;
+      font-family:var(--font);
+      color:var(--text);
+      background:
+        radial-gradient(900px 600px at 20% 10%, #ffe6f0 0%, transparent 60%),
+        radial-gradient(800px 600px at 90% 30%, #ffd3e3 0%, transparent 55%),
+        linear-gradient(135deg, var(--bg1), var(--bg2));
+      overflow:hidden;
+    }
+
+    .card{
+      width:min(520px, 92vw);
+      background:var(--card);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:34px 26px 26px;
+      text-align:center;
+      position:relative;
+    }
+
+    .cat{
+      width:88px; height:88px;
+      margin:0 auto 16px;
+      position:relative;
+    }
+    .cat svg{ width:100%; height:100%; display:block; }
+
+    h1{
+      margin:0 0 18px;
+      font-size:clamp(24px, 4vw, 34px);
+      line-height:1.15;
+      letter-spacing:-0.02em;
+    }
+
+    .btnRow{
+      display:flex;
+      gap:16px;
+      justify-content:center;
+      align-items:center;
+      margin-top:14px;
+      position:relative;
+      height:64px;
+    }
+
+    button{
+      border:0;
+      border-radius:999px;
+      padding:12px 22px;
+      font-weight:700;
+      font-size:16px;
+      cursor:pointer;
+      transition:transform .12s ease, background .12s ease;
+      user-select:none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    #yesBtn{
+      background:var(--yes);
+      color:var(--btnText);
+      box-shadow: 0 10px 18px rgba(255,59,122,.28);
+    }
+    #yesBtn:hover{ background:var(--yesHover); transform:translateY(-1px); }
+    #yesBtn:active{ transform:translateY(1px) scale(.99); }
+
+    /* The "No" button is absolutely positioned so it can move around */
+    #noBtn{
+      background:#e9e9ef;
+      color:#111;
+      position:absolute;
+      left: 58%;
+      top: 50%;
+      transform:translate(-50%,-50%);
+      box-shadow: 0 10px 18px rgba(0,0,0,.08);
+    }
+    #noBtn:hover{ transform:translate(-50%,-50%) scale(1.02); }
+
+    .hint{
+      margin-top:14px;
+      font-size:12px;
+      opacity:.7;
+    }
+
+    /* Success screen */
+    .success{
+      display:none;
+    }
+    .success h2{
+      margin: 4px 0 14px;
+      font-size: 34px;
+      letter-spacing:-0.02em;
+    }
+    .gifWrap{
+      width:min(360px, 86%);
+      margin: 0 auto;
+      border-radius: 14px;
+      overflow:hidden;
+      box-shadow: 0 14px 30px rgba(0,0,0,.18);
+      background:#000;
+    }
+    .gifWrap img{
+      width:100%;
+      display:block;
+    }
+
+    /* Confetti */
+    .confetti{
+      pointer-events:none;
+      position:fixed;
+      inset:0;
+      overflow:hidden;
+    }
+    .confetti i{
+      position:absolute;
+      top:-20px;
+      width:10px;
+      height:14px;
+      opacity:.9;
+      border-radius:2px;
+      animation: fall linear forwards;
+    }
+    @keyframes fall{
+      to{
+        transform: translateY(110vh) rotate(720deg);
+      }
+    }
+
+    /* Mobile spacing */
+    @media (max-width:420px){
+      .card{ padding:28px 18px 22px; }
+      #noBtn{ left: 62%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="confetti" id="confetti"></div>
+
+  <div class="card">
+    <div class="ask" id="askScreen">
+      <div class="cat" aria-hidden="true">
+        <!-- Simple cute cat -->
+        <svg viewBox="0 0 120 120">
+          <defs>
+            <linearGradient id="g" x1="0" x2="1">
+              <stop offset="0" stop-color="#f3b27a"/>
+              <stop offset="1" stop-color="#f0a86d"/>
+            </linearGradient>
+          </defs>
+          <path d="M28 34 L18 18 Q30 22 38 30" fill="url(#g)"/>
+          <path d="M92 34 L102 18 Q90 22 82 30" fill="url(#g)"/>
+          <circle cx="60" cy="60" r="38" fill="url(#g)"/>
+          <circle cx="46" cy="58" r="4.5" fill="#111"/>
+          <circle cx="74" cy="58" r="4.5" fill="#111"/>
+          <path d="M60 64 l-6 5 q6 7 12 0 z" fill="#ff6b9e"/>
+          <path d="M84 34
+                   c12 -10 22 -2 18 9
+                   c-3 10 -18 20 -18 20
+                   c0 0 -15 -10 -18 -20
+                   c-4 -11 6 -19 18 -9 z"
+                fill="#ff3b7a"/>
+        </svg>
+      </div>
+
+      <h1><span id="nameTarget">Hey</span>, will you be my valentine?</h1>
+
+      <div class="btnRow" id="btnRow">
+        <button id="yesBtn">Yes</button>
+        <button id="noBtn" aria-label="No">No</button>
+      </div>
+
+      <div class="hint">“No” seems a bit shy 😈</div>
+    </div>
+
+    <div class="success" id="yesScreen">
+      <h1><span id="nameTarget2">Yay</span>, will you be my valentine?</h1>
+      <h2>YAY! 🎉</h2>
+
+      <!-- Replace the GIF link with any GIF/image you want -->
+      <div class="gifWrap">
+        <img
+          id="yayGif"
+          alt="Celebration GIF"
+          src="https://media.giphy.com/media/111ebonMs90YLu/giphy.gif"
+        />
+      </div>
+
+      <div class="hint" style="margin-top:16px;">Best decision ever 😌</div>
+    </div>
+  </div>
+
+  <script>
+    // ====== CUSTOMISE THESE ======
+    // Put their name here:
+    const THEIR_NAME = "Nirali"; // <-- change this
+    // Put a GIF or image link here for the "YES" screen:
+    const YES_GIF_URL = "https://media.giphy.com/media/111ebonMs90YLu/giphy.gif"; // <-- change this
+    // =================================
+
+    const name1 = document.getElementById("nameTarget");
+    const name2 = document.getElementById("nameTarget2");
+    const yayGif = document.getElementById("yayGif");
+    name1.textContent = THEIR_NAME;
+    name2.textContent = THEIR_NAME;
+    yayGif.src = YES_GIF_URL;
+
+    const noBtn = document.getElementById("noBtn");
+    const yesBtn = document.getElementById("yesBtn");
+    const btnRow = document.getElementById("btnRow");
+    const askScreen = document.getElementById("askScreen");
+    const yesScreen = document.getElementById("yesScreen");
+
+    // Move "No" away when cursor gets close (desktop) or on tap/hover (mobile)
+    function moveNoButton() {
+      const rowRect = btnRow.getBoundingClientRect();
+      const btnRect = noBtn.getBoundingClientRect();
+
+      // Keep it within the btnRow area
+      const padding = 10;
+      const maxX = rowRect.width - btnRect.width - padding;
+      const maxY = rowRect.height - btnRect.height - padding;
+
+      const x = Math.max(padding, Math.random() * maxX);
+      const y = Math.max(padding, Math.random() * maxY);
+
+      noBtn.style.left = x + "px";
+      noBtn.style.top = y + "px";
+      noBtn.style.transform = "translate(0,0)";
+    }
+
+    // Desktop "near" effect
+    document.addEventListener("mousemove", (e) => {
+      const r = noBtn.getBoundingClientRect();
+      const dx = e.clientX - (r.left + r.width / 2);
+      const dy = e.clientY - (r.top + r.height / 2);
+      const dist = Math.sqrt(dx*dx + dy*dy);
+
+      // If cursor is within 120px, dodge
+      if (dist < 120) moveNoButton();
+    });
+
+    // Mobile / touch: move on hover/tap attempts
+    noBtn.addEventListener("mouseenter", moveNoButton);
+    noBtn.addEventListener("touchstart", (e) => {
+      e.preventDefault();
+      moveNoButton();
+    }, { passive: false });
+
+    // If they somehow click "No", still move it
+    noBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      moveNoButton();
+    });
+
+    // YES click => show success screen + confetti
+    yesBtn.addEventListener("click", () => {
+      askScreen.style.display = "none";
+      yesScreen.style.display = "block";
+      burstConfetti();
+    });
+
+    // Confetti burst
+    const confetti = document.getElementById("confetti");
+    function burstConfetti() {
+      confetti.innerHTML = "";
+      const pieces = 120;
+      for (let i = 0; i < pieces; i++) {
+        const p = document.createElement("i");
+        const left = Math.random() * 100;
+        const size = 6 + Math.random() * 10;
+        const dur = 1.8 + Math.random() * 2.2;
+        const delay = Math.random() * 0.2;
+
+        p.style.left = left + "vw";
+        p.style.width = size + "px";
+        p.style.height = (size * 1.2) + "px";
+        p.style.animationDuration = dur + "s";
+        p.style.animationDelay = delay + "s";
+        p.style.background = `hsl(${Math.random()*360}, 90%, 60%)`;
+
+        confetti.appendChild(p);
+
+        // Remove after animation
+        setTimeout(() => p.remove(), (dur + delay) * 1000 + 200);
+      }
+    }
+
+    // Put "No" somewhere random at start too
+    moveNoButton();
+  </script>
+</body>
+</html>
